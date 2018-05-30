@@ -1,0 +1,38 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+	xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+	xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+    
+	<f:section name="Configuration">
+		<flux:form id="teasercontainer" label="Teaser Container" options="{group: 'FCE'}">
+            <flux:field.input name="headline" label="Überschrift"></flux:field.input>
+		</flux:form>
+        <flux:grid>
+            <!-- Edit this grid to change the "backend layout" structure -->
+            <flux:grid.row>
+                <flux:grid.column colPos="1" colspan="4" name="Inhalt" label="Teaser-Reihen">
+                    <flux:form.variable name="allowedContentTypes" value="html,fluidcontent_content" />
+                    <flux:form.variable name="Fluidcontent" value="{allowedContentTypes: 'Nl.Content:TeaserRow.html'}" />                
+                </flux:grid.column>
+            </flux:grid.row>
+        </flux:grid>
+	</f:section>
+
+	<f:section name="Preview">
+		<!-- If you wish, place custom backend preview content here -->
+        Teaser Container <br />
+        <b>{headline}</b><br />
+	</f:section>
+
+	<f:section name="Main">
+        <section class="container teasergroup">
+            <f:if condition="{headline}">
+                <h1 class="tk-daniel boxed">{headline}</h1>
+            </f:if>
+            <flux:content.render area="Inhalt" loadRegister="{isInColumn:'1'}"/>
+        </section>
+        <div class="spacer"></div>
+	</f:section>
+</div>

@@ -1,0 +1,19 @@
+#############################
+# TYPO3 CMS DK
+#############################
+.env
+.idea
+.DS_Store
+/nbproject
+/node_modules/
+.vscode/
+/vendor
+/web/*
+!/web/typo3conf
+/web/typo3conf/*
+!/web/typo3conf/AdditionalConfiguration.php
+
+!/web/.htaccess
+
+
+

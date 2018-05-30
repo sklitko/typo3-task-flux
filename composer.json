@@ -1,0 +1,38 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mehrwert/TYPO3-phpMyAdmin.git"
+    },
+    { "type": "composer", "url": "https://composer.typo3.org/" },
+    { "type": "path", "url": "packages/*/" }
+  ],
+  "name": "typo3/dk",
+  "description": "TYPO3 CMS DK",
+  "license": "GPL-2.0+",
+  "require": {
+    "typo3/cms": "^8.7",
+    "dmitryd/typo3-realurl": "^2.2",
+    "fluidtypo3/vhs": "^4.4",
+    "mehrwert/phpmyadmin": "^5.2",
+    "helhum/typo3-console": "^5.0",
+    "helhum/dotenv-connector": "^2.0",
+    "fluidtypo3/fluidcontent": "^5.2",
+    "fluidtypo3/fluidpages": "^4.1",
+    "georgringer/news": "^6.3",
+    "fluidtypo3/flux": "^8.2",
+    "evoweb/recaptcha": "^8.2",
+    "netzlabor-coding/content": "^1.0"
+  },
+  "require-dev": {
+    "mask/mask": "^3.0",
+    "cpsit/mask-export": "^0.9.1",
+    "friendsoftypo3/extension-builder": "^8.7"
+  },
+  "extra": {
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": "web"
+    }
+  }
+}

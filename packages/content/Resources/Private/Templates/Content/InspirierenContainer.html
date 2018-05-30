@@ -1,0 +1,57 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+	xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+	xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+    
+	<f:section name="Configuration">
+		<flux:form id="inspirierencontainer" label="Inspirieren Container" options="{group: 'FCE'}">
+
+		</flux:form>
+        <flux:grid>
+            <!-- Edit this grid to change the "backend layout" structure -->
+            <flux:grid.row>
+                <flux:grid.column colPos="1" colspan="2" name="InhaltLinks" label="Inhalt links" style="width:50%;border-right: 1px dotted #999;" >
+                </flux:grid.column>
+                <flux:grid.column colPos="2" colspan="2" name="InhaltRechts" label="Inhalt rechts" style="width:50%;">
+                </flux:grid.column>
+            </flux:grid.row>
+        </flux:grid>
+	</f:section>
+
+	<f:section name="Preview">
+		<!-- If you wish, place custom backend preview content here -->
+        Inspirieren Container <br />
+	</f:section>
+
+	<f:section name="Main">
+        <div class="bg diewohnungen">
+
+            <div class="shape shape-left abs">
+                <a href="#" class="">
+                    <h4>Sie <span class="tk-daniel">wissen</span><br /> genau,<br /> <span class="tk-daniel">was Sie wollen?</span></h4>
+                    <p class="abs">Dann klicken Sie einfach hier!</p>
+                    <img src="typo3conf/ext/kastanienhoefe/Resources/Public/img/arrow-left.png" class="arrow abs">
+                </a>
+            </div>
+
+            <div class="shape shape-right abs">
+                <a href="#" class="">
+                    <h4>Lassen Sie<br /> sich von uns <span class="tk-daniel">inspirieren...</span></h4>
+                    <p class="abs">Klicken Sie daf&uuml;r einfach hier!</p>
+                    <img src="typo3conf/ext/kastanienhoefe/Resources/Public/img/arrow-right.png" class="arrow abs">
+                </a>
+            </div>
+
+        </div>
+
+        <div class="bg inspirieren">
+            <flux:content.render area="InhaltRechts" loadRegister="{isInColumn:'1'}"/>
+        </div>
+
+        <div class="bg suchen">
+            <flux:content.render area="InhaltLinks" loadRegister="{isInColumn:'1'}"/>
+        </div>    
+	</f:section>
+</div>

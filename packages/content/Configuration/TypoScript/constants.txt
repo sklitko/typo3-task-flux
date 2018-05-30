@@ -1,0 +1,5 @@
+plugin.tx_content.view {
+	templateRootPaths.default = EXT:content/Resources/Private/Templates/
+	partialRootPaths.default = EXT:content/Resources/Private/Partials/
+	layoutRootPaths.default = EXT:content/Resources/Private/Layouts/
+}

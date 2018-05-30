@@ -1,0 +1,45 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers" xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+    xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+
+    <f:section name="Configuration">
+        <flux:form id="container" label="Container" options="{group: 'Bootstrap'}">
+            <flux:field.select name="column" items="{'8': '8', '10': '10', '12': '12'}" label="Column" />
+            <flux:field.input name="class" label="Additional class" />
+        </flux:form>
+        <flux:grid>
+            <!-- Edit this grid to change the "backend layout" structure -->
+            <flux:grid.row>
+                <flux:grid.column colPos="0" colspan="4" name="Inhalt" label="Inhalt"></flux:grid.column>
+            </flux:grid.row>
+        </flux:grid>
+    </f:section>
+
+    <f:section name="Preview">
+        <!-- If you wish, place custom backend preview content here -->
+        <b>CONTENT CONTAINER (COL-{column})</b>
+    </f:section>
+
+    <f:section name="Main">
+        <section class="container {class}">
+            <div class="row">
+
+                <f:if condition="{column} == 8">
+                    <f:then>
+                        <div class="offset-sm-2 col-sm-8">
+                    </f:then>
+                    <f:else if="{column} == 10">
+                        <div class="offset-sm-1 col-sm-10">
+                    </f:else>
+                    <f:else>
+                        <div class="col-sm-12">
+                    </f:else>
+                </f:if>
+
+                <flux:content.render area="Inhalt" loadRegister="{isInColumn:'0'}" />
+                </div>
+                </div>
+        </section>
+    </f:section>
+    </div>

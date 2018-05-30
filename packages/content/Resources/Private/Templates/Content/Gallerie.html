@@ -1,0 +1,37 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+	xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+	xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+    
+	<f:section name="Configuration">
+		<flux:form label="Galerie" id="gallery" options="{group: 'FCE'}">
+			<!-- Insert fields, sheets, grid, form section objects etc. here, in this flux:flexform tag -->
+			<flux:field.inline.fal name="img" label="Bilder" multiple="TRUE" maxItems="99" />
+		</flux:form>
+	</f:section>
+
+	<f:section name="Preview">
+		<!-- If you wish, place custom backend preview content here -->
+		Galerie<br />
+        <f:for each="{v:content.resources.fal(field: 'img')}" as="image"><f:image treatIdAsReference="TRUE" src="{image.id}" width="150" /></f:for>
+	</f:section>
+
+	<f:section name="Main">
+        <f:if condition="{v:content.resources.fal(field: 'img')-> f:count()} == 1">
+        <f:then>
+        <div class="" data-length="{v:content.resources.fal(field: 'img')-> f:count()}">        
+        </f:then>
+        <f:else>
+        <div class="owl-carousel owl-theme owl-loaded" data-length="{v:content.resources.fal(field: 'img')-> f:count()}">
+        </f:else>
+        </f:if>
+            <f:for each="{v:content.resources.fal(field: 'img')}" as="image">
+                <div class="slide">
+                    <img class="img-responsive" src="<f:uri.image treatIdAsReference="TRUE" src="{image.id}" width="1100" />" alt="">
+                </div>
+            </f:for>
+        </div>
+	</f:section>
+</div>

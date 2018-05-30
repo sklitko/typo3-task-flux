@@ -1,0 +1,259 @@
+#!/usr/bin/env php
+<?php
+
+const ENV_NAME = '.env';
+const ENV_EXAMPLE_NAME = ENV_NAME . '.example';
+
+$root = str_replace('\\', '/', __DIR__);
+$envExPath = $root . '/' . ENV_EXAMPLE_NAME;
+$envPath = $root . '/' . ENV_NAME;
+$params = CLIHelper::getParams();
+$defaultValues = [];
+
+echo CLIHelper::getColoredString("Dotenv Initialization Tool\n\n", 'green');
+
+if (!file_exists($envExPath)) {
+    die(CLIHelper::getColoredString("File \"$envExPath\" does not exists\n\n", 'red'));
+}
+
+if (file_exists($envPath) && filesize($envPath)) {
+	echo CLIHelper::getColoredString("File \"$envPath\" already exists\n\n", 'brown');
+
+	if (isset($params['noOverride']) && $params['noOverride']) {
+        exit(0);
+    }
+
+	$answer = CLIHelper::prompt("Do you want to override it? [yes|no]: ");
+
+	echo "\n";
+    if (strncasecmp($answer, 'y', 1)) {
+        echo CLIHelper::getColoredString("Quit initialization\n", 'brown');
+        exit(0);
+    }
+
+    if (!is_readable($envPath) || !is_file($envPath)) {
+		die(CLIHelper::getColoredString("Unable to read \"$envPath\"\n\n", 'red'));
+	}
+
+	foreach (DotenvHelper::readLinesFromFile($envPath) as $line) {
+		if (!DotenvHelper::isComment($line) && DotenvHelper::looksLikeSetter($line)) {
+			list($name, $value) = DotenvHelper::normaliseEnvironmentVariable($line);
+			$defaultValues[$name] = $value;
+		}
+	}
+}
+
+if (!is_readable($envExPath) || !is_file($envExPath)) {
+	die(CLIHelper::getColoredString("Unable to read \"$envExPath\"\n\n", 'red'));
+}
+
+$lines = array_map(function($line) use ($defaultValues) {
+	if (!DotenvHelper::isComment($line) && DotenvHelper::looksLikeSetter($line)) {
+		list($name, $value) = DotenvHelper::normaliseEnvironmentVariable($line);
+
+		if (array_key_exists($name, $defaultValues)) {
+			$value = $defaultValues[$name] ? $defaultValues[$name] : $value;
+		}
+
+		$default = $value ? CLIHelper::getColoredString("($value)", 'green') : "";
+		$in = CLIHelper::prompt("$name=$default");
+		$value = $in !== '' ? $in : $value;
+		$var = DotenvHelper::normaliseEnvironmentVariable($name, DotenvHelper::addReqQuotes($value));
+		$var[1] = DotenvHelper::addReqQuotes($var[1]);
+		return implode('=', $var);
+	} else {
+		return $line;
+	}
+}, DotenvHelper::readLinesFromFile($envExPath));
+
+$env = fopen($envPath, "w") or die(CLIHelper::getColoredString("\nFailed to create \"$envPath\"\n", 'red'));
+fwrite($env, implode(PHP_EOL, $lines));
+fclose($env);
+
+echo CLIHelper::getColoredString("\nSuccessfully\n", 'green');
+
+class DotenvHelper
+{
+	public static function normaliseEnvironmentVariable($name, $value = null)
+	{
+	    list($name, $value) = self::splitCompoundStringIntoParts($name, $value);
+	    list($name, $value) = self::sanitiseVariableName($name, $value);
+	    list($name, $value) = self::sanitiseVariableValue($name, $value);
+	    return array($name, $value);
+	}
+
+	private static function beginsWithAQuote($value)
+	{
+	    return isset($value[0]) && ($value[0] === '"' || $value[0] === '\'');
+	}
+
+	public static function addReqQuotes($value, $q = '"')
+	{
+	    if (!self::beginsWithAQuote($value) && strpos($value, " ") !== false) {
+			return $q . $value . $q;
+	    }
+		return $value;
+	}
+
+	private static function sanitiseVariableValue($name, $value)
+	{
+	    $value = trim($value);
+	    if (!$value) {
+	        return array($name, $value);
+	    }
+
+	    if (self::beginsWithAQuote($value)) { // value starts with a quote
+	        $quote = $value[0];
+	        $regexPattern = sprintf(
+	            '/^
+	            %1$s          # match a quote at the start of the value
+	            (             # capturing sub-pattern used
+	             (?:          # we do not need to capture this
+	              [^%1$s\\\\] # any character other than a quote or backslash
+	              |\\\\\\\\   # or two backslashes together
+	              |\\\\%1$s   # or an escaped quote e.g \"
+	             )*           # as many characters that match the previous rules
+	            )             # end of the capturing sub-pattern
+	            %1$s          # and the closing quote
+	            .*$           # and discard any string after the closing quote
+	            /mx',
+	            $quote
+	        );
+	        $value = preg_replace($regexPattern, '$1', $value);
+	        $value = str_replace("\\$quote", $quote, $value);
+	        $value = str_replace('\\\\', '\\', $value);
+	    } else {
+	        $parts = explode(' #', $value, 2);
+	        $value = trim($parts[0]);
+	        // Unquoted values cannot contain whitespace
+	        if (preg_match('/\s+/', $value) > 0) {
+	            throw new \Exception('Dotenv values containing spaces must be surrounded by quotes.');
+	        }
+	    }
+	    return array($name, trim($value));
+	}
+
+	private static function sanitiseVariableName($name, $value)
+	{
+	    $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
+	    return array($name, $value);
+	}
+
+	private static function splitCompoundStringIntoParts($name, $value)
+	{
+	    if (strpos($name, '=') !== false) {
+	        list($name, $value) = array_map('trim', explode('=', $name, 2));
+	    }
+	    return array($name, $value);
+	}
+
+	public static function isComment($line)
+	{
+	    $line = ltrim($line);
+	    return isset($line[0]) && $line[0] === '#';
+	}
+
+	public static function readLinesFromFile($filePath)
+	{
+	    // Read file into an array of lines with auto-detected line endings
+	    $autodetect = ini_get('auto_detect_line_endings');
+	    ini_set('auto_detect_line_endings', '1');
+	    $lines = file($filePath, FILE_IGNORE_NEW_LINES);
+	    ini_set('auto_detect_line_endings', $autodetect);
+	    return $lines;
+	}
+
+	public static function looksLikeSetter($line)
+	{
+		return strpos($line, '=') !== false;
+	}
+}
+
+class CLIHelper {
+	const FG_COLORS = [
+		'black' => '0;30',
+		'dark_gray' => '1;30',
+		'blue' => '0;34',
+		'light_blue' => '1;34',
+		'green' => '0;32',
+		'light_green' => '1;32',
+		'cyan' => '0;36',
+		'light_cyan' => '1;36',
+		'red' => '0;31',
+		'light_red' => '1;31',
+		'purple' => '0;35',
+		'light_purple' => '1;35',
+		'brown' => '0;33',
+		'yellow' => '1;33',
+		'light_gray' => '0;37',
+		'white' => '1;37',
+	];
+
+	const BG_COLORS = [
+		'black' => '40',
+		'red' => '41',
+		'green' => '42',
+		'yellow' => '43',
+		'blue' => '44',
+		'magenta' => '45',
+		'cyan' => '46',
+		'light_gray' => '47',
+	];
+
+	// Returns colored string
+	public static function getColoredString($string, $foreground_color = null, $background_color = null) {
+		$colored_string = "";
+
+		// Check if given foreground color found
+		if (isset(self::FG_COLORS[$foreground_color])) {
+			$colored_string .= "\033[" . self::FG_COLORS[$foreground_color] . "m";
+		}
+		// Check if given background color found
+		if (isset(self::BG_COLORS[$background_color])) {
+			$colored_string .= "\033[" . self::BG_COLORS[$background_color] . "m";
+		}
+
+		// Add string and end coloring
+		$colored_string .=  $string . "\033[0m";
+
+		return $colored_string;
+	}
+
+	public static function prompt($s)
+	{
+		echo $s;
+		return trim(fgets(STDIN));
+	}
+
+    public static function getParams()
+    {
+        $rawParams = [];
+        if (isset($_SERVER['argv'])) {
+            $rawParams = $_SERVER['argv'];
+            array_shift($rawParams);
+        }
+
+        $params = [];
+        foreach ($rawParams as $param) {
+            if (preg_match('/^--(\w+-?\w+)(=(.*))?$/', $param, $matches)) {
+                $name = self::dashesToCamelCase($matches[1]);
+                $params[$name] = isset($matches[3]) ? $matches[3] : true;
+            } else {
+                $params[] = $param;
+            }
+        }
+        return $params;
+    }
+
+    private static function dashesToCamelCase($string, $capitalizeFirstCharacter = false)
+    {
+
+        $str = str_replace('-', '', ucwords($string, '-'));
+
+        if (!$capitalizeFirstCharacter) {
+            $str = lcfirst($str);
+        }
+
+        return $str;
+    }
+}

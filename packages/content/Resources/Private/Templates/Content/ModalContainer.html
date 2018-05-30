@@ -1,0 +1,32 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+	xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+	xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+    
+	<f:section name="Configuration">
+		<flux:form id="modalcontainer" label="Modal Container" options="{group: 'FCE'}">
+
+		</flux:form>
+        <flux:grid>
+            <!-- Edit this grid to change the "backend layout" structure -->
+            <flux:grid.row>
+                <flux:grid.column colPos="1" colspan="4" name="Inhalt" label="Content">            
+                </flux:grid.column>
+            </flux:grid.row>
+        </flux:grid>
+	</f:section>
+
+	<f:section name="Preview">
+		<!-- If you wish, place custom backend preview content here -->
+        Modal Container <br />
+	</f:section>
+
+	<f:section name="Main">
+        <div class="remodal" data-remodal-id="modal">
+            <button data-remodal-action="close" class="remodal-close"></button>
+            <flux:content.render area="Inhalt" loadRegister="{isInColumn:'1'}"/>
+        </div>
+	</f:section>
+</div>

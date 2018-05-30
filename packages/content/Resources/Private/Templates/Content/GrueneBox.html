@@ -1,0 +1,32 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+	xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+	xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+    
+	<f:section name="Configuration">
+		<flux:form label="grüne Box" id="gruenebox" options="{group: 'FCE'}">
+			<!-- Insert fields, sheets, grid, form section objects etc. here, in this flux:flexform tag -->
+			<flux:field.text name="text" label="Text" />
+			<flux:field.input name="link" label="Link">
+				<flux:wizard.link activeTab="page"/>
+			</flux:field.input>
+		</flux:form>
+	</f:section>
+
+	<f:section name="Preview">
+		<!-- If you wish, place custom backend preview content here -->
+        <b>grüne Box</b>
+		<f:format.nl2br>{text}</f:format.nl2br>
+	</f:section>
+
+	<f:section name="Main">
+        <div class="green-bg margin-bottom-half">
+            <h4 class="text-white">
+                <a href="{f:uri.typolink(parameter: link)}"><f:format.nl2br>{text}</f:format.nl2br></a>
+            </h4>
+            <a href="{f:uri.typolink(parameter: link)}"><img src="typo3conf/ext/kastanienhoefe/Resources/Public/img/los-gehts-white.png" width="107" height="107" class="img-responsive teaser-cta"></a>
+        </div>
+	</f:section>
+</div>

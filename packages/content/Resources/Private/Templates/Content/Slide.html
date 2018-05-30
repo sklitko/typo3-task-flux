@@ -1,0 +1,43 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+	xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+	xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+    
+	<f:section name="Configuration">
+		<flux:form label="Slide" id="slide" options="{group: 'FCE'}">
+			<!-- Insert fields, sheets, grid, form section objects etc. here, in this flux:flexform tag -->
+			<flux:field.input name="titel" label="Überschrift" />
+			<flux:field.inline.fal name="img" label="Bild" multiple="TRUE" maxItems="1" />
+			<flux:field.input name="link" label="Link">
+				<flux:wizard.link activeTab="page"/>
+			</flux:field.input>
+            <flux:field.select name="showarrow" items="{0: 'nein', 1: 'ja'}" label="Pfeil nach unten anzeigen?"/>
+			<flux:field.text name="html" label="HTML" />
+
+		</flux:form>
+	</f:section>
+
+	<f:section name="Preview">
+		<!-- If you wish, place custom backend preview content here -->
+		<f:format.raw value="{titel}" /><br />
+	</f:section>
+
+	<f:section name="Main">
+
+
+        <div class="section" style="background-image: url('<f:for each="{v:content.resources.fal(field: 'img')}" as="image"><f:uri.image treatIdAsReference="TRUE" src="{image.id}" width="1390" /></f:for>');">
+		<f:format.raw value="{html}" />
+
+            <div class="slide-text">
+				<a href="{f:uri.typolink(parameter: link)}">
+                    <h2><f:format.raw value="{titel}" /></h2>
+                    <f:if condition="{showarrow}==1"><img src="typo3conf/ext/kastanienhoefe/Resources/Public/img/arrow-down.png" width="124" height="36" class="img-responsive arrow-down"></f:if>
+                    <img src="typo3conf/ext/kastanienhoefe/Resources/Public/img/los-gehts.png" width="100" height="100" class="img-responsive teaser-cta">
+                </a>
+			</div>
+			
+        </div>
+	</f:section>
+</div>

@@ -1,0 +1,75 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers" xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+  xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+  <f:layout name="Content" />
+
+  <f:section name="Configuration">
+    <flux:form id="teaser" label="teaser" options="{group: 'Bootstrap'}">
+      <flux:form.sheet name="teaser" label="Teaser">
+        <flux:form.section name="teasers">
+          <flux:form.object name="teaser" label="teaser">
+            <flux:field.input name="title" label="title" />
+            <flux:field.text name="caption" enableRichText="TRUE" />
+            <flux:field.file name="image" label="image" />
+            <flux:field.input name="link" label="Link">
+              <flux:wizard.link activeTab="page" />
+            </flux:field.input>
+          </flux:form.object>
+        </flux:form.section>
+      </flux:form.sheet>
+      <flux:grid>
+        <v:condition.type.isArray value="{teasers}">
+          <f:for each="{teasers}" as="teaser" iteration="iteration">
+            <f:for each="{teaser}" key="teaserType" as="teaserData">
+              <f:if condition="{0: teaserType} == {0: 'content'}">
+                <flux:grid.row>
+                  <flux:grid.column name="{teaserData.id}" label="{v:l(key: 'flux.carousel.label.grid.column.prefix')}: {teaserData.id}" />
+                </flux:grid.row>
+              </f:if>
+            </f:for>
+          </f:for>
+        </v:condition.type.isArray>
+      </flux:grid>
+
+
+    </flux:form>
+  </f:section>
+
+  <f:section name="Preview">
+    <b>Teasers</b>
+    <p>Elements: {teasers -> f:count()}</p>
+  </f:section>
+
+
+
+
+
+  <f:section name="Main">
+    <div class="row">
+      <f:for each="{teasers}" as="element" iteration="iteration">
+        <div class="col-lg-4">
+          <f:for each="{element}" key="elementType" as="elementData">
+            <f:if condition="{elementData.image}">
+              <f:then>
+                <f:image src="{elementData.image}" alt="{elementData.title}" class="rounded-circle" width="140" height="140" />
+              </f:then>
+            </f:if>
+
+            <h2>{elementData.title}</h2>
+            <f:if condition="{0: elementData.caption} != {0: ''}">
+              {elementData.caption -> f:format.html()}
+            </f:if>
+            <p>
+              <a href="{f:uri.typolink(parameter: elementData.link)}" class="btn btn-secondary">
+                <f:format.nl2br>View details »</f:format.nl2br>
+              </a>
+            </p>
+
+          </f:for>
+        </div>
+      </f:for>
+    </div>
+  </f:section>
+
+
+</div>

@@ -1,0 +1,78 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers" xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+  xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+  <f:layout name="Content" />
+
+  <f:section name="Configuration">
+    <flux:form id="featurette" label="featurette" options="{group: 'Bootstrap'}">
+
+      <flux:field.input name="title" label="Title" />
+      <flux:field.input name="subtitle" label="Subtitle" />
+      <flux:field.text name="caption" enableRichText="TRUE" />
+      <flux:field.file name="image" label="image" />
+      <flux:field.select name="positionImage" items="Left, Right" label="Position Image" />
+
+
+
+    </flux:form>
+  </f:section>
+
+  <f:section name="Preview">
+    <b>Featurette</b>
+  </f:section>
+
+
+
+
+
+  <f:section name="Main">
+
+    <div class="row featurette">
+      <f:if condition="{settings.image}">
+        <f:then>
+          <f:if condition="{settings.positionImage} =='Right'">
+            <f:then>
+              <div class="col-md-7">
+                <h2 class="featurette-heading">{settings.title}
+                  <span class="text-muted">{settings.subtitle}</span>
+                </h2>
+                <span class="lead">{settings.caption -> f:format.html()}</span>
+              </div>
+              <div class="col-md-5">
+                <f:image src="{settings.image}" alt="{settings.title}" class="featurette-image img-fluid mx-auto" width="500" height="500"
+                />
+              </div>
+            </f:then>
+            <f:else>
+              <div class="col-md-7 order-md-2">
+                <h2 class="featurette-heading">{settings.title}
+                  <span class="text-muted">{settings.subtitle}</span>
+                </h2>
+                <span class="lead">{settings.caption -> f:format.html()}</span>
+              </div>
+              <div class="col-md-5 order-md-1">
+                <f:image src="{settings.image}" alt="{settings.title}" class="featurette-image img-fluid mx-auto" width="500" height="500"
+                />
+              </div>
+            </f:else>
+          </f:if>
+        </f:then>
+        <f:else>
+          <div class="col-md-12">
+            <h2 class="featurette-heading">{settings.title}
+              <span class="text-muted">{settings.subtitle}</span>
+            </h2>
+            <span class="lead">{settings.caption -> f:format.html()}</span>
+          </div>
+        </f:else>
+      </f:if>
+
+
+
+
+    </div>
+
+  </f:section>
+
+
+</div>

@@ -1,0 +1,70 @@
+##############
+#### PAGE ####
+##############
+page = PAGE
+page {
+    typeNum = 0
+    shortcutIcon = EXT:content/Resources/Public/Icons/favicon.ico
+
+    meta {
+        viewport = {$page.meta.viewport}
+        robots = {$page.meta.robots}
+        apple-mobile-web-app-capable = {$page.meta.apple-mobile-web-app-capable}
+        description = {$page.meta.description}
+        description {
+            override.field = description
+        }
+        author = {$page.meta.author}
+        author {
+            override.field = author
+        }
+        keywords = {$page.meta.keywords}
+        keywords {
+            override.field = keywords
+        }
+        X-UA-Compatible = {$page.meta.compatible}
+        X-UA-Compatible {
+            attribute = http-equiv
+        }
+    }
+
+    includeCSSLibs {
+        bootstrap = EXT:content/Resources/Public/Css/bootstrap.min.css
+        bootstrap.disableCompression = 1
+
+				carousel = EXT:content/Resources/Public/Css/carousel.css
+        carousel.disableCompression = 1
+
+    }
+
+    includeCSS {
+    }
+
+    includeJSLibs {
+			
+    }
+
+    includeJS {
+
+    }
+
+    includeJSFooterlibs {
+
+    }
+
+    includeJSFooter {
+			jquery = EXT:content/Resources/Public/JavaScript/jquery-3.3.1.slim.min.js
+			popper = EXT:content/Resources/Public/JavaScript/popper.min.js
+			bootstrap = EXT:content/Resources/Public/JavaScript/bootstrap.min.js
+			holder = EXT:content/Resources/Public/JavaScript/holder.min.js
+    }
+}
+
+plugin.tx_content {
+	view {
+		templateRootPaths.0 = {$plugin.tx_content.view.templateRootPaths.default}
+		partialRootPaths.0 = {$plugin.tx_content.view.partialRootPaths.default}
+		layoutRootPaths.0 = {$plugin.tx_content.view.layoutRootPaths.default}
+	}
+}
+

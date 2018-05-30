@@ -1,0 +1,68 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+	xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+	xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+	xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+
+    <f:layout name="Content" />
+    
+	<f:section name="Configuration">
+
+		<flux:form label="Teaser-Reihe" id="teaserrow" options="{group: 'FCE'}">
+			<!-- Insert fields, sheets, grid, form section objects etc. here, in this flux:flexform tag -->
+
+            <flux:form.sheet name="teaser.links" label="Teaser links">
+                <flux:field.input name="headline" label="Überschrift" />
+                <flux:field.inline.fal name="imgl" label="Bild" multiple="TRUE" maxItems="1" />
+                <flux:field.input name="link" label="Link">
+                    <flux:wizard.link activeTab="page"/>
+                </flux:field.input>
+            </flux:form.sheet>
+            <flux:form.sheet name="teaser.mitte" label="Teaser Mitte">
+                <flux:field.input name="headline" label="Überschrift" />
+                <flux:field.inline.fal name="imgm" label="Bild" multiple="TRUE" maxItems="1" />
+                <flux:field.input name="link" label="Link">
+                    <flux:wizard.link activeTab="page"/>
+                </flux:field.input>
+            </flux:form.sheet>
+            <flux:form.sheet name="teaser.rechts" label="Teaser rechts">
+                <flux:field.input name="headline" label="Überschrift" />
+                <flux:field.inline.fal name="imgr" label="Bild" multiple="TRUE" maxItems="1" />
+                <flux:field.input name="link" label="Link">
+                    <flux:wizard.link activeTab="page"/>
+                </flux:field.input>
+            </flux:form.sheet>
+
+		</flux:form>
+	</f:section>
+
+	<f:section name="Preview">
+		<!-- If you wish, place custom backend preview content here -->
+        <b>Teaser-Reihe</b><br>
+		{teaser.links.headline}<br>
+		{teaser.mitte.headline}<br>
+		{teaser.rechts.headline}<br>        
+	</f:section>
+
+    <f:section name="Teaser">
+        <f:if condition="{link}">
+            <div class="col-sm-4">
+                <div class="teaser">
+                    <a href="{f:uri.typolink(parameter: link)}">
+                        <h3 class="headline">{headline}</h3>
+                        <img src="<f:for each="{v:content.resources.fal(field: img)}" as="image"><f:uri.image treatIdAsReference="TRUE" src="{image.id}" width="700" /></f:for>" class="img-responsive teaser-image">
+                        <img src="typo3conf/ext/kastanienhoefe/Resources/Public/img/los-gehts.png" width="66" height="66" class="img-responsive teaser-cta">
+                        <div class="clearfix"></div>
+                    </a>
+                </div>  
+            </div>
+        </f:if>
+    </f:section>
+    
+	<f:section name="Main">
+        <div class="row">
+            <f:render section="Teaser" arguments="{link:teaser.links.link, headline:teaser.links.headline, img:'imgl'}" />
+            <f:render section="Teaser" arguments="{link:teaser.mitte.link, headline:teaser.mitte.headline, img:'imgm'}" />
+            <f:render section="Teaser" arguments="{link:teaser.rechts.link, headline:teaser.rechts.headline, img:'imgr'}" />
+        </div>        
+	</f:section>
+</div>

@@ -1,0 +1,24 @@
+<svg width="150" height="150" viewBox="0 0 150 150" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>ext_icon</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(405 131)">
+<g id="ext_icon">
+<g id="Page 1">
+<g id="typo3 badge netzlabor 150x150">
+<g id="Page 1">
+<g id="Fill 1">
+<use xlink:href="#path0_fill" transform="translate(-405 -131)" fill="#3C4551"/>
+</g>
+<g id="Fill 2">
+<use xlink:href="#path1_fill" transform="translate(-372 -74)" fill="#FFFFFF"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" fill-rule="evenodd" d="M 0 150L 150 150L 150 0L 0 0L 0 150Z"/>
+<path id="path1_fill" fill-rule="evenodd" d="M 76.9111 68.8669L 92 68.8669L 92 0L 76.9111 0L 76.9111 68.8669ZM 52.9244 16.1893C 48.284 16.1893 41.8991 17.5436 38.0293 22.0924L 38.0293 17.5436L 22.9381 17.5436L 22.9381 69L 38.0293 69L 38.0293 36.9834C 38.0293 32.3435 39.963 28.3762 46.056 28.3762C 51.8641 28.3762 53.4102 31.7621 53.4102 36.7896L 53.4102 69L 68.4991 69L 68.4991 30.9892C 68.4991 23.2506 65.1128 16.1893 52.9244 16.1893ZM 0 68.8646L 15.6704 68.8646L 15.6704 52.6146L 0 52.6146L 0 68.8646Z"/>
+</defs>
+</svg>
